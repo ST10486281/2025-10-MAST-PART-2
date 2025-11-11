@@ -4,9 +4,8 @@ import { Button } from 'react-native-paper';
 import DishFormModal from './DishFormModal';
 import DishList from './DishList';
 
-export default function HomeScreen({ menuItems, setMenuItems }: any) {
+export default function ManageItemsScreen({ menuItems, setMenuItems }: any) {
   const [modalVisible, setModalVisible] = React.useState(false);
-
   const courses = ['Starters', 'Mains', 'Desserts'];
 
   const handleSubmit = (dish: any) => {
@@ -29,7 +28,7 @@ export default function HomeScreen({ menuItems, setMenuItems }: any) {
         </Button>
       </View>
 
-      {/* List */}
+      {/* List (includes delete buttons etc. if needed later) */}
       <DishList courses={courses} menu={menuItems} />
 
       {/* Modal */}
