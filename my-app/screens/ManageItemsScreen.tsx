@@ -29,7 +29,7 @@ export default function ManageItemsScreen({ menuItems, setMenuItems }: any) {
       </View>
 
       {/* List (includes delete buttons etc. if needed later) */}
-      <DishList courses={courses} menu={menuItems} />
+      <DishList courses={courses} menu={menuItems} setMenuItems={setMenuItems} />
 
       {/* Modal */}
       <DishFormModal
