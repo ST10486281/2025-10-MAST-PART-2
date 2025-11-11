@@ -15,17 +15,27 @@ const theme = {
 };
 
 const Stack = createNativeStackNavigator();
+
 export default function App() {
+  const [menuItems, setMenuItems] = React.useState<any[]>([]);
+
   return (
     <PaperProvider theme={theme}>
       <ScrollView style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Home">
+              {(props) => (
+                <HomeScreen
+                  {...props}
+                  menuItems={menuItems}
+                  setMenuItems={setMenuItems}
+                />
+              )}
+            </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
       </ScrollView>
     </PaperProvider>
   );
 }
-

@@ -4,14 +4,13 @@ import { Button } from 'react-native-paper';
 import DishFormModal from './DishFormModal';
 import DishList from './DishList';
 
-export default function HomeScreen() {
+export default function HomeScreen({ menuItems, setMenuItems }: any) {
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const courses = ['Starters', 'Mains', 'Desserts'];
-  const [menu, setMenu] = React.useState<any[]>([]);
 
   const handleSubmit = (dish: any) => {
-    setMenu(prev => [...prev, dish]);
+    setMenuItems((prev: any[]) => [...prev, dish]);
   };
 
   return (
@@ -21,17 +20,17 @@ export default function HomeScreen() {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
-        <Text>Total items: {menu.length}</Text>
+        <Text>Total items: {menuItems.length}</Text>
         <Button mode="contained" onPress={() => setModalVisible(true)}>
           Add Dish
         </Button>
       </View>
 
       {/* List */}
-      <DishList courses={courses} menu={menu} />
+      <DishList courses={courses} menu={menuItems} />
 
       {/* Modal */}
       <DishFormModal
