@@ -24,11 +24,21 @@ export default function DrawerMenuContent({ active, setActive, onClose, navigate
       <Drawer.Item
         label="Manage Items"
         icon="information-outline"
-        active={active === 'ManageItems'}
+        active={active === 'Manage Items'}
         onPress={() => {
-          setActive('ManageItems');
+          setActive('Manage Items');
           onClose();
-          navigate('ManageItems');
+          navigate('Manage Items');
+        }}
+      />
+      <Drawer.Item
+        label="Filter By Course"
+        icon="information-outline"
+        active={active === 'Filter By Course'}
+        onPress={() => {
+          setActive('Filter By Course');
+          onClose();
+          navigate('Filter By Course');
         }}
       />
       {/* add more Drawer.Item here if needed */}

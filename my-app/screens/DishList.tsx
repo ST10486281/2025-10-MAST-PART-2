@@ -12,22 +12,30 @@ type Dish = {
 type DishListProps = {
   courses: string[];
   menu: Dish[];
+  filterCourse?: number | null;
 };
 
-export default function DishList({ courses, menu }: DishListProps) {
-  // computed grouping
+export default function DishList({ courses, menu, filterCourse = null }: DishListProps) {
   const grouped = React.useMemo(() => {
+    const filteredMenu =
+      filterCourse === null ? menu : menu.filter(d => d.course === filterCourse);
     return courses.map((courseName, idx) => ({
       course: courseName,
-      items: menu.filter(d => d.course === idx),
+      items: filteredMenu.filter(d => d.course === idx),
     }));
-  }, [courses, menu]);
+  }, [courses, menu, filterCourse]);
+
+  const visibleGroups =
+    filterCourse === null ? grouped : grouped.filter((_, idx) => idx === filterCourse);
 
   return (
     <View style={{ paddingHorizontal: 8 }}>
-      {grouped.map((group, idx) => (
+      {visibleGroups.map((group, idx) => (
         <View key={idx}>
-          <List.Subheader style={{ padding: 0 }}>{group.course}</List.Subheader>
+          {/* Only show course heading if not filtered */}
+          {filterCourse === null && (
+            <List.Subheader style={{ padding: 0 }}>{group.course}</List.Subheader>
+          )}
 
           {group.items.map((dish, i) => (
             <List.Item

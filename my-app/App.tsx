@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native';
 import ManageItemsScreen from './screens/ManageItemsScreen';
 import DrawerMenuContent from './screens/DrawerMenuContent';
 import { useRef, useState } from 'react';
+import FilterScreen from './screens/FilterScreen';
 
 const theme = {
   ...MD3LightTheme,
@@ -45,9 +46,14 @@ export default function App() {
                 <HomeScreen {...props} menuItems={menuItems} setMenuItems={setMenuItems} />
               )}
             </Stack.Screen>
-            <Stack.Screen name="ManageItems">
+            <Stack.Screen name="Manage Items">
               {(props) => (
                 <ManageItemsScreen {...props} menuItems={menuItems} setMenuItems={setMenuItems} />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="Filter By Course">
+              {(props) => (
+                <FilterScreen {...props} menuItems={menuItems} setMenuItems={setMenuItems} />
               )}
             </Stack.Screen>
           </Stack.Navigator>
