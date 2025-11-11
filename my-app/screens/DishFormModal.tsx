@@ -30,8 +30,7 @@ export default function DishFormModal({
   const [description, setDescription] = React.useState('');
   const [course, setCourse] = React.useState<number | null>(null);
   const [price, setPrice] = React.useState('');
-  const [priceError, setPriceError] = React.useState(false);
-
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const [menuVisible, setMenuVisible] = React.useState(false);
 
   const resetForm = () => {
@@ -39,7 +38,7 @@ export default function DishFormModal({
     setDescription('');
     setCourse(null);
     setPrice('');
-    setPriceError(false);
+    setErrors({});
   };
 
   const handleDismiss = () => {
@@ -48,18 +47,24 @@ export default function DishFormModal({
   };
 
   const handleSave = () => {
+    const newErrors: { [key: string]: string } = {};
     const parsedPrice = parseFloat(price);
 
-    if (isNaN(parsedPrice)) {
-      setPriceError(true);
-      return; // block save
+    if (!name.trim()) newErrors.name = 'Dish name is required.';
+    if (!description.trim()) newErrors.description = 'Description is required.';
+    if (course === null) newErrors.course = 'Please select a course.';
+    if (!price.trim()) newErrors.price = 'Price is required.';
+    else if (!/^\d+(\.\d{1,2})?$/.test(price))
+      newErrors.price = 'Price must be a valid number (e.g. 12 or 12.50).';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
     }
 
-    if (course === null) return; // require course
-
     const dish: Dish = {
-      name,
-      description,
+      name: name.trim(),
+      description: description.trim(),
       course,
       price: parsedPrice,
     };
@@ -77,16 +82,25 @@ export default function DishFormModal({
           <TextInput
             label="Dish Name"
             value={name}
-            onChangeText={setName}
-            style={{ marginBottom: 12 }}
+            onChangeText={(text) => {
+              setName(text);
+              setErrors((e) => ({ ...e, name: '' }));
+            }}
+            error={!!errors.name}
           />
+          {errors.name && <HelperText type="error">{errors.name}</HelperText>}
+
           <TextInput
             label="Description"
             value={description}
-            onChangeText={setDescription}
+            onChangeText={(text) => {
+              setDescription(text);
+              setErrors((e) => ({ ...e, description: '' }));
+            }}
             multiline
-            style={{ marginBottom: 12 }}
+            error={!!errors.description}
           />
+          {errors.description && <HelperText type="error">{errors.description}</HelperText>}
 
           <Menu
             visible={menuVisible}
@@ -95,7 +109,7 @@ export default function DishFormModal({
               <Button
                 mode="outlined"
                 onPress={() => setMenuVisible(true)}
-                style={{ marginBottom: 12 }}
+                style={{ marginTop: 8 }}
               >
                 {course !== null ? courses[course] : 'Select Course'}
               </Button>
@@ -107,31 +121,33 @@ export default function DishFormModal({
                 onPress={() => {
                   setCourse(idx);
                   setMenuVisible(false);
+                  setErrors((e) => ({ ...e, course: '' }));
                 }}
                 title={c}
               />
             ))}
           </Menu>
+          {errors.course && <HelperText type="error">{errors.course}</HelperText>}
 
           <TextInput
             label="Price"
             value={price}
-            onChangeText={text => {
-              setPrice(text);
-              setPriceError(false);
+            onChangeText={(text) => {
+              // allow only digits and optional dot
+              const cleaned = text.replace(/[^0-9.]/g, '');
+              setPrice(cleaned);
+              setErrors((e) => ({ ...e, price: '' }));
             }}
             keyboardType="numeric"
-            error={priceError}
+            error={!!errors.price}
           />
-          {priceError && (
-            <HelperText type="error" visible={priceError}>
-              Price must be a number
-            </HelperText>
-          )}
+          {errors.price && <HelperText type="error">{errors.price}</HelperText>}
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={handleDismiss}>Cancel</Button>
-          <Button onPress={handleSave}>{saveLabel}</Button>
+          <Button mode="contained" onPress={handleSave}>
+            {saveLabel}
+          </Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>
